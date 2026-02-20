@@ -1,6 +1,12 @@
-
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
+  import {
+    Play,
+    Square,
+    RotateCcw,
+    Timer as TimerIcon,
+    Clock,
+  } from "lucide-svelte";
 
   let time: number = 0; // dalam detik
   let timerRunning: boolean = false;
@@ -65,21 +71,21 @@
     stopStopwatch();
     time = 0;
   }
-  
+
   // --- Combined Controls ---
   function handleStart() {
-      if (activeTab === 'timer') startTimer();
-      else startStopwatch();
+    if (activeTab === "timer") startTimer();
+    else startStopwatch();
   }
 
   function handleStop() {
-      if (activeTab === 'timer') stopTimer();
-      else stopStopwatch();
+    if (activeTab === "timer") stopTimer();
+    else stopStopwatch();
   }
-  
+
   function handleReset() {
-      if (activeTab === 'timer') resetTimer();
-      else resetStopwatch();
+    if (activeTab === "timer") resetTimer();
+    else resetStopwatch();
   }
 
   onDestroy(() => {
@@ -87,62 +93,109 @@
     clearInterval(stopwatchInterval);
   });
 
-  let activeTab: 'timer' | 'stopwatch' = 'timer';
+  let activeTab: "timer" | "stopwatch" = "timer";
 
-  function selectTab(tab: 'timer' | 'stopwatch') {
-      activeTab = tab;
-      time = 0; // Reset time on tab switch
-      stopTimer();
-      stopStopwatch();
-      if (tab === 'timer') {
-          time = timerInputMinutes * 60;
-      }
+  function selectTab(tab: "timer" | "stopwatch") {
+    activeTab = tab;
+    time = 0; // Reset time on tab switch
+    stopTimer();
+    stopStopwatch();
+    if (tab === "timer") {
+      time = timerInputMinutes * 60;
+    }
   }
-  
-  $: isRunning = (activeTab === 'timer' && timerRunning) || (activeTab === 'stopwatch' && stopwatchRunning);
-  $: isStopped = !isRunning;
 
+  $: isRunning =
+    (activeTab === "timer" && timerRunning) ||
+    (activeTab === "stopwatch" && stopwatchRunning);
+  $: isStopped = !isRunning;
 </script>
 
-<div class="card bg-base-100 shadow-xl max-w-md mx-auto">
+<div class="card bg-base-100 shadow-md border border-base-200 max-w-md mx-auto">
   <div class="card-body items-center text-center">
+    <h2 class="card-title text-2xl mb-4 text-primary">
+      {#if activeTab === "timer"}
+        <TimerIcon size={28} />
+      {:else}
+        <Clock size={28} />
+      {/if}
+      {activeTab === "timer" ? "Timer" : "Stopwatch"}
+    </h2>
 
     <div role="tablist" class="tabs tabs-boxed mb-6">
-      <a role="tab" class="tab" class:tab-active={activeTab === 'timer'} on:click={() => selectTab('timer')}>Timer</a>
-      <a role="tab" class="tab" class:tab-active={activeTab === 'stopwatch'} on:click={() => selectTab('stopwatch')}>Stopwatch</a>
+      <a
+        role="tab"
+        class="tab smooth-transition"
+        class:tab-active={activeTab === "timer"}
+        on:click={() => selectTab("timer")}
+      >
+        <TimerIcon size={16} class="mr-2" />
+        Timer
+      </a>
+      <a
+        role="tab"
+        class="tab smooth-transition"
+        class:tab-active={activeTab === "stopwatch"}
+        on:click={() => selectTab("stopwatch")}
+      >
+        <Clock size={16} class="mr-2" />
+        Stopwatch
+      </a>
     </div>
 
-    <div class="radial-progress bg-primary text-primary-content border-4 border-primary" style="--value:0;">00:00:00</div>
-    <div class="text-5xl font-mono font-extrabold my-6">
-        <span class="countdown">
-        <span style="--value:{Math.floor(time / 3600)};"></span>h
-        <span style="--value:{Math.floor((time % 3600) / 60)};"></span>m
-        <span style="--value:{time % 60};"></span>s
-        </span>
+    <div class="text-6xl md:text-7xl font-mono font-extrabold my-8">
+      <span class="countdown">
+        <span style="--value:{Math.floor(time / 3600)};" class="text-primary"
+        ></span>:
+        <span
+          style="--value:{Math.floor((time % 3600) / 60)};"
+          class="text-secondary"
+        ></span>:
+        <span style="--value:{time % 60};" class="text-accent"></span>
+      </span>
     </div>
 
-    {#if activeTab === 'timer'}
-        <div class="form-control w-full max-w-xs mb-4">
-            <label class="label" for="timer-input">
-                <span class="label-text">Setel durasi dalam menit</span>
-            </label>
-            <input 
-                type="number" 
-                id="timer-input" 
-                bind:value={timerInputMinutes} 
-                min="1" 
-                on:change={resetTimer} 
-                class="input input-bordered w-full max-w-xs" 
-                disabled={isRunning}
-            />
-        </div>
+    {#if activeTab === "timer"}
+      <div class="form-control w-full max-w-xs mb-4">
+        <label class="label" for="timer-input">
+          <span class="label-text font-semibold">Setel durasi dalam menit</span>
+        </label>
+        <input
+          type="number"
+          id="timer-input"
+          bind:value={timerInputMinutes}
+          min="1"
+          on:change={resetTimer}
+          class="input input-bordered w-full max-w-xs focus:input-primary smooth-transition"
+          disabled={isRunning}
+        />
+      </div>
     {/if}
 
     <div class="card-actions justify-center gap-4">
-      <button class="btn btn-success btn-wide" on:click={handleStart} disabled={isRunning}>Mulai</button>
-      <button class="btn btn-warning" on:click={handleStop} disabled={isStopped}>Stop</button>
-      <button class="btn btn-error" on:click={handleReset}>Reset</button>
+      <button
+        class="btn btn-success btn-wide btn-icon smooth-transition"
+        on:click={handleStart}
+        disabled={isRunning}
+      >
+        <Play size={18} />
+        Mulai
+      </button>
+      <button
+        class="btn btn-warning btn-icon smooth-transition"
+        on:click={handleStop}
+        disabled={isStopped}
+      >
+        <Square size={18} />
+        Stop
+      </button>
+      <button
+        class="btn btn-error btn-icon smooth-transition"
+        on:click={handleReset}
+      >
+        <RotateCcw size={18} />
+        Reset
+      </button>
     </div>
-
   </div>
 </div>

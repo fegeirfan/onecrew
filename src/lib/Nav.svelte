@@ -1,47 +1,95 @@
-
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher } from "svelte";
+  import {
+    Home,
+    Shuffle,
+    BarChart2,
+    ListCheck,
+    Timer,
+    NotepadText,
+  } from "lucide-svelte";
 
+  export let activePage: string = "main";
   const dispatch = createEventDispatcher();
 
-  let activePage: string = 'main';
-
   function navigate(page: string) {
-    activePage = page;
-    dispatch('navigate', page);
+    dispatch("navigate", page);
+    // Close drawer on mobile after navigation
+    const drawer = document.getElementById("main-drawer") as HTMLInputElement;
+    if (drawer) drawer.checked = false;
   }
 </script>
 
-<div class="navbar bg-base-100 rounded-box shadow-lg mb-8">
-  <div class="navbar-start">
-    <div class="dropdown">
-      <label tabindex="0" class="btn btn-ghost lg:hidden">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
-      </label>
-      <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-        <li><a href="#!" on:click={() => navigate('main')} class:active={activePage === 'main'}>Utama</a></li>
-        <li><a href="#!" on:click={() => navigate('picker')} class:active={activePage === 'picker'}>Pemilih</a></li>
-        <li><a href="#!" on:click={() => navigate('stats')} class:active={activePage === 'stats'}>Statistik</a></li>
-        <li><a href="#!" on:click={() => navigate('checklist')} class:active={activePage === 'checklist'}>Checklist</a></li>
-        <li><a href="#!" on:click={() => navigate('timer')} class:active={activePage === 'timer'}>Timer</a></li>
-        <li><a href="#!" on:click={() => navigate('notes')} class:active={activePage === 'notes'}>Catatan</a></li>
-      </ul>
-    </div>
-    <a href="#!" class="btn btn-ghost normal-case text-xl">OneCrew</a>
+<ul
+  class="menu p-4 w-80 min-h-full bg-base-200 text-base-content flex flex-col gap-2"
+>
+  <div class="mb-8 px-4 mt-4">
+    <h1 class="text-3xl font-bold">
+      <span class="text-primary">One</span><span class="text-secondary"
+        >Crew</span
+      >
+    </h1>
+    <p class="text-sm opacity-70 mt-1">Suite Utilitas All-in-One</p>
   </div>
-  <div class="navbar-center hidden lg:flex">
-    <ul class="menu menu-horizontal px-1">
-      <li><a href="#!" on:click={() => navigate('main')} class:btn-active={activePage === 'main'} class="btn btn-ghost">Utama</a></li>
-      <li><a href="#!" on:click={() => navigate('picker')} class:btn-active={activePage === 'picker'} class="btn btn-ghost">Pemilih</a></li>
-      <li><a href="#!" on:click={() => navigate('stats')} class:btn-active={activePage === 'stats'} class="btn btn-ghost">Statistik</a></li>
-       <li class="ml-4"><a href="#!" on:click={() => navigate('checklist')} class:btn-active={activePage === 'checklist'} class="btn btn-sm btn-outline">Checklist</a></li>
-      <li><a href="#!" on:click={() => navigate('timer')} class:btn-active={activePage === 'timer'} class="btn btn-sm btn-outline">Timer</a></li>
-      <li><a href="#!" on:click={() => navigate('notes')} class:btn-active={activePage === 'notes'} class="btn btn-sm btn-outline">Catatan</a></li>
-    </ul>
-  </div>
-  <div class="navbar-end">
-    <!-- Bisa ditambahkan item di sini nanti -->
-  </div>
-</div>
 
-<!-- Style block is not needed anymore thanks to Daisy UI -->
+  <li>
+    <a
+      href="#!"
+      on:click={() => navigate("main")}
+      class:active={activePage === "main"}
+      class="py-3"
+    >
+      <Home size={20} /> Utama
+    </a>
+  </li>
+  <li>
+    <a
+      href="#!"
+      on:click={() => navigate("picker")}
+      class:active={activePage === "picker"}
+      class="py-3"
+    >
+      <Shuffle size={20} /> Pemilih
+    </a>
+  </li>
+  <li>
+    <a
+      href="#!"
+      on:click={() => navigate("stats")}
+      class:active={activePage === "stats"}
+      class="py-3"
+    >
+      <BarChart2 size={20} /> Statistik
+    </a>
+  </li>
+  <li>
+    <a
+      href="#!"
+      on:click={() => navigate("checklist")}
+      class:active={activePage === "checklist"}
+      class="py-3"
+    >
+      <ListCheck size={20} /> Checklist
+    </a>
+  </li>
+  <li>
+    <a
+      href="#!"
+      on:click={() => navigate("timer")}
+      class:active={activePage === "timer"}
+      class="py-3"
+    >
+      <Timer size={20} /> Timer
+    </a>
+  </li>
+  <li>
+    <a
+      href="#!"
+      on:click={() => navigate("notes")}
+      class:active={activePage === "notes"}
+      class="py-3"
+    >
+      <NotepadText size={20} /> Catatan
+    </a>
+  </li>
+</ul>
